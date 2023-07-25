@@ -12,14 +12,12 @@ import PyPDF2
 import json
 import requests
 from flask import Response, request
-from selenium.webdriver.firefox.service import Service
-
 app = Flask(__name__)
 cors = CORS(app)
 
 # geckodriver_path = r'C:/flask_app/scrub/geckodriver.exe'  # Replace with the actual path to geckodriver
-geckodriver_path = "/snap/bin/geckodriver"
-# firefox_binary_path = "/usr/bin/firefox"  # Replace with the actual path to Firefox binary
+geckodriver_path = r'/home/ubuntu/crawling/crawling/geckodriver'
+firefox_binary_path = r'/usr/bin/firefox'  # Replace with the actual path to Firefox binary
 @app.route('/', methods=['GET', 'POST'])
 def scrape_website():
     if request.method == 'POST':
@@ -33,15 +31,14 @@ def scrape_website():
         word_found_urls = set()  # Set to store the URLs where the words are found
         options = Options()
         options.headless = True  # Run Firefox in headless mode
-        
-        # options.binary = firefox_binary_path  # Set the Firefox binary path
+        options.binary = firefox_binary_path  # Set the Firefox binary path
 
         sentence_locations = []
         for i in discovered_urls:
             # Call the function to check if the words are present on the page
             if check_words_on_page(i, target_words):
                 word_found_urls.add(i)
-            driver = webdriver.Firefox(options=options, service=Service(geckodriver_path))
+            driver = webdriver.Firefox(options=options, executable_path=geckodriver_path)
             driver.get(i)
             print("=-=--loop=-=-=", i)
             for word in target_words:
@@ -134,7 +131,7 @@ def get_all_pages(url):
 async def get_sentence_locations(urls, target_words):
     options = Options()
     options.headless = True  # Run Firefox in headless mode
-    # options.binary = firefox_binary_path  # Set the Firefox binary path
+    options.binary = firefox_binary_path  # Set the Firefox binary path
 
     sentence_locations = []
 
@@ -187,7 +184,7 @@ def scroll_to_position():
 
         options = Options()
         options.headless = True  # Run Firefox in headless mode
-        # options.binary = firefox_binary_path  # Set the Firefox binary path
+        options.binary = firefox_binary_path  # Set the Firefox binary path
         driver = webdriver.Firefox(options=options, executable_path=geckodriver_path)
 
         # Make the request directly without a proxy
@@ -322,11 +319,8 @@ def pdf_extract():
 
 
 if __name__ == '__main__':
+    os.environ['PATH'] += os.pathsep + os.path.dirname(geckodriver_path)
     options = Options()
-    options.headless = True  # Run Firefox in headless mode
-    # options.binary_location = firefox_binary_path  # Set the Firefox binary path
-
-    # Replace the deprecated 'executable_path' with 'service'
-    service = Service(geckodriver_path)
-
+    options.add_argument('-headless')  # Run Firefox in headless mode
+    options.binary_location = firefox_binary_path  # Set the Firefox binary path
     app.run(host='0.0.0.0')
