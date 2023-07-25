@@ -1,17 +1,17 @@
 from bs4 import BeautifulSoup
-from flask import Flask, render_template, request, Response, redirect,jsonify
+from flask import Flask, render_template, request, Response, redirect, jsonify
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.firefox.options import Options
+from selenium.webdriver.firefox.service import Service
 import time
 from flask_cors import CORS
-from selenium.webdriver.common.action_chains import ActionChains
 import os
-from urllib.parse import urljoin,urlparse
+from urllib.parse import urljoin, urlparse
 import PyPDF2
 import json
 import requests
-from flask import Response, request
+
 app = Flask(__name__)
 cors = CORS(app)
 
@@ -320,4 +320,13 @@ def pdf_extract():
 
 if __name__ == '__main__':
     os.environ['PATH'] += os.pathsep + os.path.dirname(geckodriver_path)
+
+    # Use the Service object to set geckodriver path
+    service = Service(executable_path=geckodriver_path)
+
+    options = Options()
+    options.headless = True  # Run Firefox in headless mode
+    options.add_argument('-headless')  # Recommended way to set headless mode
+    options.service = service  # Set the Service object for geckodriver
+
     app.run(host='0.0.0.0')
