@@ -31,7 +31,7 @@ def scrape_website():
         word_found_urls = set()  # Set to store the URLs where the words are found
         options = Options()
         options.add_argument('-headless') # Run Firefox in headless mode
-        options.binary = firefox_binary_path  # Set the Firefox binary path
+        options.binary_location  = firefox_binary_path  # Set the Firefox binary path
 
         sentence_locations = []
         for i in discovered_urls:
