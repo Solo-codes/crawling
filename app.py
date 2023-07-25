@@ -323,4 +323,4 @@ if __name__ == '__main__':
     options = Options()
     options.add_argument('-headless')  # Run Firefox in headless mode
     options.binary_location = firefox_binary_path  # Set the Firefox binary path
-    app.run(host='0.0.0.0'
+    app.run(host='0.0.0.0')
