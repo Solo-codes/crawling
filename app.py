@@ -32,7 +32,8 @@ def scrape_website():
         discovered_urls = get_all_pages(url)
         word_found_urls = set()  # Set to store the URLs where the words are found
         options = Options()
-        options.headless = True  # Run Firefox in headless mode
+        # options.headless = True  # Run Firefox in headless mode
+        options.add_argument('-headless')
         # options.binary = firefox_binary_path  # Set the Firefox binary path
 
         sentence_locations = []
@@ -40,7 +41,7 @@ def scrape_website():
             # Call the function to check if the words are present on the page
             if check_words_on_page(i, target_words):
                 word_found_urls.add(i)
-            driver = webdriver.Firefox(options=options, executable_path=geckodriver_path)
+            driver = webdriver.Firefox(options=options, service=Service(geckodriver_path))
             driver.get(i)
             print("=-=--loop=-=-=", i)
             for word in target_words:
