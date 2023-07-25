@@ -2,7 +2,7 @@ from bs4 import BeautifulSoup
 from flask import Flask, render_template, request, Response, redirect,jsonify
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from selenium.webdriver.firefox.options import Options
+from selenium.webdriver.firefox.options import Options as FirefoxOptions
 import time
 from flask_cors import CORS
 from selenium.webdriver.common.action_chains import ActionChains
@@ -29,16 +29,16 @@ def scrape_website():
         print("=-=-=-=-url=-=-=-",url)
         discovered_urls = get_all_pages(url)
         word_found_urls = set()  # Set to store the URLs where the words are found
-        options = Options()
-        options.add_argument('-headless') # Run Firefox in headless mode
-        options.binary_location  = firefox_binary_path  # Set the Firefox binary path
+        options = FirefoxOptions()
+        options.headless = True # Run Firefox in headless mode
+        options.binary_location = firefox_binary_path  # Set the Firefox binary path
 
         sentence_locations = []
         for i in discovered_urls:
             # Call the function to check if the words are present on the page
             if check_words_on_page(i, target_words):
                 word_found_urls.add(i)
-            driver = webdriver.Firefox(options=options, executable_path=geckodriver_path)
+            driver = webdriver.Firefox(executable_path=geckodriver_path, options=options)
             driver.get(i)
             print("=-=--loop=-=-=", i)
             for word in target_words:
@@ -129,9 +129,9 @@ def get_all_pages(url):
 
 
 async def get_sentence_locations(urls, target_words):
-    options = Options()
+    options = FirefoxOptions()
     options.headless = True  # Run Firefox in headless mode
-    options.binary = firefox_binary_path  # Set the Firefox binary path
+    options.binary_location = firefox_binary_path  # Set the Firefox binary path
 
     sentence_locations = []
 
@@ -182,9 +182,9 @@ def scroll_to_position():
         target_element_id = 'fintech-service'
         print(f'Target element ID: {target_element_id}')
 
-        options = Options()
+        options = FirefoxOptions()
         options.headless = True  # Run Firefox in headless mode
-        options.binary = firefox_binary_path  # Set the Firefox binary path
+        options.binary_location = firefox_binary_path  # Set the Firefox binary path
         driver = webdriver.Firefox(options=options, executable_path=geckodriver_path)
 
         # Make the request directly without a proxy
@@ -320,7 +320,7 @@ def pdf_extract():
 
 if __name__ == '__main__':
     os.environ['PATH'] += os.pathsep + os.path.dirname(geckodriver_path)
-    options = Options()
+    options = FirefoxOptions()
     options.add_argument('-headless')  # Run Firefox in headless mode
     options.binary_location = firefox_binary_path  # Set the Firefox binary path
     app.run(host='0.0.0.0')
