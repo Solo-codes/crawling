@@ -12,12 +12,14 @@ import PyPDF2
 import json
 import requests
 from flask import Response, request
+from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
+
 app = Flask(__name__)
 cors = CORS(app)
 
 # geckodriver_path = r'C:/flask_app/scrub/geckodriver.exe'  # Replace with the actual path to geckodriver
 geckodriver_path = r'/snap/bin/geckodriver/geckodriver'
-firefox_binary_path = r'/usr/bin/firefox'  # Replace with the actual path to Firefox binary
+firefox_binary_path = FirefoxBinary('/usr/bin/firefox')  # Replace with the actual path to Firefox binary
 @app.route('/', methods=['GET', 'POST'])
 def scrape_website():
     if request.method == 'POST':
