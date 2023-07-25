@@ -319,4 +319,4 @@ def pdf_extract():
 
 if __name__ == '__main__':
     os.environ['PATH'] += os.pathsep + os.path.dirname(geckodriver_path)
-    app.run()
+    app.run(host='0.0.0.0')
