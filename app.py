@@ -12,6 +12,8 @@ import PyPDF2
 import json
 import requests
 from flask import Response, request
+from selenium.webdriver.firefox.service import Service
+
 app = Flask(__name__)
 cors = CORS(app)
 
@@ -319,8 +321,11 @@ def pdf_extract():
 
 
 if __name__ == '__main__':
-    os.environ['PATH'] += os.pathsep + os.path.dirname(geckodriver_path)
     options = Options()
-    options.add_argument('-headless')  # Run Firefox in headless mode
+    options.headless = True  # Run Firefox in headless mode
     options.binary_location = firefox_binary_path  # Set the Firefox binary path
+
+    # Replace the deprecated 'executable_path' with 'service'
+    service = Service(geckodriver_path)
+
     app.run(host='0.0.0.0')
