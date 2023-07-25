@@ -16,7 +16,7 @@ app = Flask(__name__)
 cors = CORS(app)
 
 # geckodriver_path = r'C:/flask_app/scrub/geckodriver.exe'  # Replace with the actual path to geckodriver
-geckodriver_path = r'/home/ubuntu/crawling/crawling/geckodriver'
+geckodriver_path = r'/snap/bin/geckodriver/geckodriver'
 firefox_binary_path = r'/usr/bin/firefox'  # Replace with the actual path to Firefox binary
 @app.route('/', methods=['GET', 'POST'])
 def scrape_website():
