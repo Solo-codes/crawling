@@ -1,0 +1,97 @@
+<html>
+<head>
+    <title>Sentence Locations</title>
+    <style>
+        .location-btn {
+            margin-bottom: 10px;
+        }
+        .scroll-frame {
+            width: 100%;
+            height: 500px;
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+    {% if sentence_locations %}
+    <h1>Sentence Locations Found:</h1>
+    {% set words = [] %}
+    {% for location in sentence_locations %}
+        {% if location.word not in words %}
+            <h2>{{ location.word }}</h2>
+        {% endif %}
+        <p>URL: {{ location.url }}</p>
+        {% for position in location.positions %}
+            <p>Coordinates: Top: {{ position.top }}, Left: {{ position.left }}</p>
+        {% endfor %}
+        <button class="location-btn" onclick="scrollIframe('{{ location.url }}', {{ location.positions[0].top }}, {{ location.positions[0].left }},'{{ location.word }}')">Scroll</button>
+        {% set _ = words.append(location.word) %}
+    {% endfor %}
+    {% else %}
+    <h1>No Sentence Locations Found</h1>
+    {% endif %}
+
+    <iframe id="scrollFrame" class="scroll-frame" src="/proxy?url=http://www.chillarcards.com/"></iframe>
+
+    <script>
+        function containsWord(node, word) {
+            if (node.nodeType === Node.TEXT_NODE) {
+                return node.nodeValue.includes(word);
+            } else if (node.nodeType === Node.ELEMENT_NODE) {
+                for (let childNode of node.childNodes) {
+                    if (containsWord(childNode, word)) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+    
+        function applyCSSToWord(iframeDocument, word) {
+            let walker = iframeDocument.createTreeWalker(
+                iframeDocument.body,
+                NodeFilter.SHOW_TEXT,
+                null,
+                false
+            );
+    
+            while (walker.nextNode()) {
+                let node = walker.currentNode;
+                if (containsWord(node, word)) {
+                    let parentElement = node.parentElement;
+                    parentElement.style.backgroundColor = 'red';
+                }
+            }
+        }
+    
+        function scrollIframe(url, top, left, word) {
+            var frame = document.getElementById('scrollFrame');
+            frame.src = '/proxy?url=' + encodeURIComponent(url);
+    
+            frame.onload = function() {
+                var iframeWindow = frame.contentWindow;
+                var iframeDocument = iframeWindow.document;
+    
+                // Check if the link element exists before updating its href
+                var linkElement = iframeDocument.querySelector('link[href="' + url + '"]');
+                if (linkElement) {
+                    linkElement.setAttribute('href', '/proxy?url=' + encodeURIComponent(url));
+                } else {
+                    console.log('Link element not found in iframe document.');
+                }
+    
+                // Scroll the iframe to the given coordinates
+                iframeWindow.scrollTo({
+                    top: top,
+                    left: left,
+                    behavior: 'smooth'  // Use smooth scrolling behavior
+                });
+    
+                // Apply CSS changes to the passed word
+                applyCSSToWord(iframeDocument, word);
+            }
+        }
+    </script>
+    
+</body>
+</html>

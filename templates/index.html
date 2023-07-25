@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Enter Words</title>
+</head>
+<body>
+    <form action="/" method="post">
+        <input type="text" name="url" placeholder="enter website url">
+        <div id="input-container">
+            <input type="text" name="word" placeholder="Enter a word">
+        </div>
+        <button type="button" onclick="addInput()">Add Word</button>
+        <br><br>
+        <input type="submit" value="Submit">
+    </form>
+    <br>
+    <a href="pdf">Select PDF</a>
+
+    <script>
+        function addInput() {
+            var inputContainer = document.getElementById('input-container');
+            var input = document.createElement('input');
+            input.type = 'text';
+            input.name = 'word';
+            input.placeholder = 'Enter a word';
+            inputContainer.appendChild(input);
+        }
+    </script>
+</body>
+</html>
