@@ -15,8 +15,9 @@ from flask import Response, request
 app = Flask(__name__)
 cors = CORS(app)
 
-geckodriver_path = r'C:/flask_app/scrub/geckodriver.exe'  # Replace with the actual path to geckodriver
-firefox_binary_path = r'C:/Program Files/Mozilla Firefox/firefox.exe'  # Replace with the actual path to Firefox binary
+# geckodriver_path = r'C:/flask_app/scrub/geckodriver.exe'  # Replace with the actual path to geckodriver
+geckodriver_path = r'/home/ubuntu/crawling/crawling/geckodriver.exe'
+# firefox_binary_path = r'C:/Program Files/Mozilla Firefox/firefox.exe'  # Replace with the actual path to Firefox binary
 @app.route('/', methods=['GET', 'POST'])
 def scrape_website():
     if request.method == 'POST':
@@ -30,7 +31,7 @@ def scrape_website():
         word_found_urls = set()  # Set to store the URLs where the words are found
         options = Options()
         options.headless = True  # Run Firefox in headless mode
-        options.binary = firefox_binary_path  # Set the Firefox binary path
+        # options.binary = firefox_binary_path  # Set the Firefox binary path
 
         sentence_locations = []
         for i in discovered_urls:
@@ -130,7 +131,7 @@ def get_all_pages(url):
 async def get_sentence_locations(urls, target_words):
     options = Options()
     options.headless = True  # Run Firefox in headless mode
-    options.binary = firefox_binary_path  # Set the Firefox binary path
+    # options.binary = firefox_binary_path  # Set the Firefox binary path
 
     sentence_locations = []
 
@@ -183,7 +184,7 @@ def scroll_to_position():
 
         options = Options()
         options.headless = True  # Run Firefox in headless mode
-        options.binary = firefox_binary_path  # Set the Firefox binary path
+        # options.binary = firefox_binary_path  # Set the Firefox binary path
         driver = webdriver.Firefox(options=options, executable_path=geckodriver_path)
 
         # Make the request directly without a proxy
